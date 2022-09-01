@@ -4,8 +4,8 @@ RUN apk update && apk add git
 
 RUN go get github.com/gomodule/redigo/redis
 
-ADD . /go/src/visit-counter
-RUN go install visit-counter
+ADD . /go/src/redis-active-checker
+RUN go install github.com/eda-yuji-10472/redis-active-checker@0.9.0
 
 ENV REDISHOST redis
 ENV REDISPORT 6379

@@ -1,4 +1,4 @@
-module github.com/GoogleCloudPlatform/golang-samples/memorystore/redis
+module github.com/eda-yuji-10472/redis-active-checker
 
 go 1.14
 
