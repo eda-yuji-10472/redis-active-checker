@@ -10,5 +10,4 @@ RUN go install github.com/eda-yuji-10472/redis-active-checker@0.9.1
 ENV REDISHOST redis
 ENV REDISPORT 6379
 
-ENTRYPOINT /go/bin/visit-counter
-
+ENTRYPOINT /go/bin/redis-active-checker
