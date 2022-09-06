@@ -20,6 +20,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -43,26 +44,31 @@ func main() {
 	conn := redisPool.Get()
 	defer conn.Close()
 
-	for {
-		// read hostname
-		s, err := redis.String(conn.Do("GET", "hostName"))
-		if err != nil || s == hostName {
-			// write hostname
-			r, err := conn.Do("SET", "hostName", hostName, "EX", ex)
-			if err != nil {
-				fmt.Print(err)
-				return
-			}
-			fmt.Println(s)
-			fmt.Println(r) // OK
-			//return
-		} else {
-			fmt.Println("Active Node: ", s)
-			os.Exit(1)
+	i, err := strconv.Atoi(ex)
+	if err != nil {
+		// ... handle error
+		panic(err)
+	}
+	// read hostname
+	s, err := redis.String(conn.Do("GET", "hostName"))
+	if err != nil || s == hostName {
+		// write hostname
+		r, err := conn.Do("SET", "hostName", hostName, "EX", ex)
+		if err != nil {
+			fmt.Print(err)
 			return
 		}
-		time.Sleep(time.Second * 1)
+		fmt.Println(s)
+		fmt.Println(r) // OK
+		//return
+	} else {
+		fmt.Println("Active Node: ", s)
+		time.Sleep(time.Second * 1 * time.Duration(i))
+		//os.Exit(1)
+		//return
 	}
+
+	time.Sleep(time.Second * 1 * time.Duration(i))
 
 }
 
