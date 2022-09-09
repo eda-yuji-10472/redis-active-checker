@@ -60,15 +60,14 @@ func main() {
 		}
 		fmt.Println(s)
 		fmt.Println(r) // OK
-		//return
+		time.Sleep(time.Second * 1 * time.Duration(i))
+		return
 	} else {
 		fmt.Println("Active Node: ", s)
 		time.Sleep(time.Second * 1 * time.Duration(i))
 		//os.Exit(1)
-		//return
+		return
 	}
-
-	time.Sleep(time.Second * 1 * time.Duration(i))
 
 }
 
