@@ -20,13 +20,26 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
 )
 
 func main() {
+
+	fmt.Println("Start process....")
+	go func() {
+		trap := make(chan os.Signal, 1)
+		signal.Notify(trap, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGINT)
+		s := <-trap
+		fmt.Printf("Received shutdown signal %s\n", s)
+		fmt.Printf("Shutdown gracefully....\n")
+		os.Exit(0)
+	}()
+
 	ex := os.Getenv("EX")
 	hostName := os.Getenv("HOSTNAME")
 	redisHost := os.Getenv("REDISHOST")
