@@ -51,25 +51,26 @@ func main() {
 	}
 	// read hostname
 	s, err := redis.String(conn.Do("GET", "hostName"))
-	if err != nil || s == hostName {
-		// write hostname
-		r, err := conn.Do("SET", "hostName", hostName, "EX", ex)
-		if err != nil {
-			fmt.Print(err)
-			return
+	for {
+		if err != nil || s == hostName {
+			// write hostname
+			r, err := conn.Do("SET", "hostName", hostName, "EX", i+1)
+			if err != nil {
+				fmt.Print(err)
+				return
+			}
+			fmt.Println(s)
+			fmt.Println(r) // OK
+			time.Sleep(time.Second * 1 * time.Duration(i))
+			os.Exit(0)
+			//return
+		} else {
+			fmt.Println("Active Node: ", s)
+			time.Sleep(time.Second * 1 * time.Duration(i))
+			//os.Exit(1)
+			//return
 		}
-		fmt.Println(s)
-		fmt.Println(r) // OK
-		time.Sleep(time.Second * 1 * time.Duration(i))
-		os.Exit(0)
-		//return
-	} else {
-		fmt.Println("Active Node: ", s)
-		time.Sleep(time.Second * 1 * time.Duration(i))
-		os.Exit(1)
-		//return
 	}
-
 }
 
 // [END memorystore_main_go]
