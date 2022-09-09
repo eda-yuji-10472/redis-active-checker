@@ -57,5 +57,6 @@ steps:
 # [END cloudbuild_go_logs_yaml]
 # Store images in Google Artifact Registry
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/myimage:$SHORT_SHA
+  - us-central1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/myimage:latest
+  #- us-central1-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/myimage:$SHORT_SHA
 # [END cloudbuild_go_yaml]
