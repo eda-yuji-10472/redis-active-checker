@@ -49,26 +49,37 @@ func main() {
 		// ... handle error
 		panic(err)
 	}
-	// read hostname
-	s, err := redis.String(conn.Do("GET", "hostName"))
 	for {
-		if err != nil || s == hostName {
-			// write hostname
-			r, err := conn.Do("SET", "hostName", hostName, "EX", i+1)
-			if err != nil {
-				fmt.Print(err)
-				return
+		// read hostname
+		s, err := redis.String(conn.Do("GET", "hostName"))
+		if err != nil {
+			if s == "" {
+				r, err := conn.Do("SET", "hostName", hostName, "EX", i+1)
+				if err != nil {
+					fmt.Print(err)
+					return
+				}
+				fmt.Println("insert: ", hostName)
+				fmt.Println(r) // OK
 			}
-			fmt.Println(s)
-			fmt.Println(r) // OK
-			time.Sleep(time.Second * 1 * time.Duration(i))
-			os.Exit(0)
-			//return
+			return
 		} else {
-			fmt.Println("Active Node: ", s)
-			time.Sleep(time.Second * 1 * time.Duration(i))
-			//os.Exit(1)
-			//return
+			if s == hostName {
+				// write hostname
+				r, err := conn.Do("SET", "hostName", hostName, "EX", i+1)
+				if err != nil {
+					fmt.Print(err)
+					return
+				}
+				fmt.Println(s)
+				fmt.Println(r) // OK
+				//return
+			} else {
+				fmt.Println("Active Node: ", s)
+				//os.Exit(1)
+				//return
+			}
+			time.Sleep(time.Second / 8 * time.Duration(i))
 		}
 	}
 }
